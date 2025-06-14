@@ -4,7 +4,7 @@ A simple Visual Studio Code Extension for listing, viewing, creating/deleting an
 
 **Be careful:** this is not an official Firebase product. This extension relies on the [Firebase Admin SDK](https://firebase.google.com/docs/admin/setup) and its usage will generate reads and writes that may impact your Firebase billing.
 
-![Demo](https://youtu.be/CaDOCA5DG-k)
+[Demo Video](https://youtu.be/CaDOCA5DG-k)
 
 ## How to use
 
