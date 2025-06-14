@@ -1,10 +1,10 @@
 # Firestore Explorer
 
-A simple Visual Studio Code Extension for listing, viewing and editing Firebase Firestore Database collections and documents using JSON syntax.
+A simple Visual Studio Code Extension for listing, viewing, creating/deleting and editing Firebase Firestore Database collections and documents using JSON syntax.
 
 **Be careful:** this is not an official Firebase product. This extension relies on the [Firebase Admin SDK](https://firebase.google.com/docs/admin/setup) and its usage will generate reads and writes that may impact your Firebase billing.
 
-![Demo](https://user-images.githubusercontent.com/54476193/162635495-b9a7d369-a090-4aa8-a874-5ff1a2e45738.gif)
+![Demo](https://youtu.be/CaDOCA5DG-k)
 
 ## How to use
 
@@ -22,9 +22,11 @@ After configuring the extension with your service account, open the Firestore Ex
 
 - view and edit the content of any document as a simple JSON file, taking advantage of the full power of vscode editor. Just save the file it to immediately update the document in the database.
 
-- view documents in paginated manner in a tabular format and search documents using keywords
+- view documents in paginated manner in a tabular format and search documents using keywords.
 
-- export documents in json format
+- export documents in json format.
+
+- create new documents and delete existing documents.
 
 ## Extension Settings
 
@@ -35,4 +37,3 @@ After configuring the extension with your service account, open the Firestore Ex
 
 - Special field types such as `geopoint` and `timestamp` are not correctly handled due to the JSON conversion.
 
-- Creating and deleting documents and collections is not supported yet.
