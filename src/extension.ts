@@ -83,6 +83,69 @@ export async function activate(context: vscode.ExtensionContext) {
     )
   );
 
+  context.subscriptions.push(
+    vscode.commands.registerCommand("firestore-explorer.createDocument", async (item) => {
+      // Prompt for document ID (optional)
+      const docId = await vscode.window.showInputBox({
+        prompt: "Enter Document ID (leave blank for auto-ID)",
+        placeHolder: "Document ID"
+      });
+
+      // Prompt for JSON data
+      const json = await vscode.window.showInputBox({
+        prompt: "Enter document data as JSON",
+        placeHolder: '{"field1": "value1", "field2": 123}'
+      });
+
+      if (!json) {
+        vscode.window.showWarningMessage("No data entered.");
+        return;
+      }
+
+      let data: any;
+      try {
+        data = JSON.parse(json);
+      } catch (e) {
+        vscode.window.showErrorMessage("Invalid JSON.");
+        return;
+      }
+
+      try {
+        const firestore = await initializeFirestore();
+        const ref = docId
+          ? item.reference.doc(docId)
+          : item.reference.doc();
+        await ref.set(data);
+        vscode.window.showInformationMessage("Document created!");
+        vscode.commands.executeCommand("firestore-explorer.refreshExplorer");
+      } catch (err: any) {
+        vscode.window.showErrorMessage("Failed to create document: " + err.message);
+      }
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("firestore-explorer.deleteDocument", async (item) => {
+      const confirm = await vscode.window.showWarningMessage(
+        `Are you sure you want to delete the document "${item.label}"?`,
+        { modal: true },
+        "Delete",
+        "Cancel"
+      );
+
+      if (confirm === "Delete") {
+        try {
+          const firestore = await initializeFirestore();
+          await item.reference.delete();
+          vscode.window.showInformationMessage("Document deleted!");
+          vscode.commands.executeCommand("firestore-explorer.refreshExplorer");
+        } catch (err: any) {
+          vscode.window.showErrorMessage("Failed to delete document: " + err.message);
+        }
+      }
+    })
+  );
+
   context.subscriptions.push(explorerView);
 
   context.subscriptions.push(
