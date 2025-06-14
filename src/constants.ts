@@ -1,1 +1,1 @@
-export const scheme = 'firestore-explorer';
+export const scheme = 'firestore-studio';

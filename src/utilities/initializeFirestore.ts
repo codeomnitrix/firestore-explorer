@@ -13,7 +13,7 @@ export default async function initializeFirestore(force = false): Promise<admin.
     if (force || admin.apps.length === 0 || admin.apps[0]?.firestore() === undefined) {
       // First obtain the service account key path
       const filePath = (await vscode.workspace
-        .getConfiguration("firestore-explorer")
+        .getConfiguration("firestore-studio")
         .get("serviceAccountKeyPath")) as string;
 
       // If no path is provided, throw an exception and advise to fill in the configuration
@@ -34,7 +34,7 @@ export default async function initializeFirestore(force = false): Promise<admin.
 
       // Initialize the Firebase app with the service account key
       const serviceAccount = JSON.parse(fs.readFileSync(filePath, "utf8"));
-      if(admin.apps.length === 0) {
+      if (admin.apps.length === 0) {
         admin.initializeApp({
           credential: admin.credential.cert(serviceAccount),
         });

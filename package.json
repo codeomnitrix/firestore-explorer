@@ -1,9 +1,16 @@
 {
-  "name": "firestore-explorer",
-  "displayName": "Firestore Explorer",
-  "description": "A simple explorer for Firebase Firestore Database",
+  "name": "firestore-studio",
+  "displayName": "Firestore Studio",
+  "description": "Firebase Firestore Database Explorer for Visual Studio Code",
+  "keywords": [
+    "firebase",
+    "firestore",
+    "explorer",
+    "database",
+    "vscode"
+  ],
   "version": "0.1.1",
-  "publisher": "vinittiwari",
+  "publisher": "codeomnitrix",
   "icon": "media/logo.png",
   "repository": {
     "url": "https://github.com/codeomnitrix/firestore-explorer"
@@ -15,24 +22,24 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:firestore-explorer.init",
-    "onCommand:firestore-explorer.openPath",
-    "onCommand:firestore-explorer.setServiceAccountKeyPath",
-    "onCommand:firestore-explorer.refreshExplorer",
-    "onCommand:firestore-explorer.showMoreItems",
-    "onView:firestore-explorer-view"
+    "onCommand:firestore-studio.init",
+    "onCommand:firestore-studio.openPath",
+    "onCommand:firestore-studio.setServiceAccountKeyPath",
+    "onCommand:firestore-studio.refreshExplorer",
+    "onCommand:firestore-studio.showMoreItems",
+    "onView:firestore-studio-view"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "configuration": {
-      "title": "Firestore Explorer",
+      "title": "Firestore Studio",
       "properties": {
-        "firestore-explorer.serviceAccountKeyPath": {
+        "firestore-studio.serviceAccountKeyPath": {
           "type": "string",
           "default": "",
           "description": "Path to Firebase Service Account Key File"
         },
-        "firestore-explorer.pagingLimit": {
+        "firestore-studio.pagingLimit": {
           "type": "number",
           "default": 10,
           "description": "Number of documents to show for each collection"
@@ -42,122 +49,122 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "firestore-explorer-view-container",
-          "title": "Firestore Explorer",
+          "id": "firestore-studio-view-container",
+          "title": "Firestore Studio",
           "icon": "media/activity-bar.svg"
         }
       ]
     },
     "views": {
-      "firestore-explorer-view-container": [
+      "firestore-studio-view-container": [
         {
-          "id": "firestore-explorer-view",
+          "id": "firestore-studio-view",
           "name": "List",
           "icon": "media/activity-bar.svg",
           "visibility": "visible",
-          "when": "config.firestore-explorer.serviceAccountKeyPath != ''"
+          "when": "config.firestore-studio.serviceAccountKeyPath != ''"
         }
       ]
     },
     "viewsWelcome": [
       {
-        "view": "firestore-explorer-view",
-        "contents": "No Firebase service account found [learn how to get yours](https://firebase.google.com/docs/admin/setup#initialize_the_sdk).\n[Open configuration](command:firestore-explorer.setServiceAccountKeyPath)"
+        "view": "firestore-studio-view",
+        "contents": "No Firebase service account found [learn how to get yours](https://firebase.google.com/docs/admin/setup#initialize_the_sdk).\n[Open configuration](command:firestore-studio.setServiceAccountKeyPath)"
       }
     ],
     "commands": [
       {
-        "command": "firestore-explorer.openPath",
-        "title": "Firestore Explorer: Open Path"
+        "command": "firestore-studio.openPath",
+        "title": "Firestore Studio: Open Path"
       },
       {
-        "command": "firestore-explorer.init",
-        "title": "Firestore Explorer: Initialize"
+        "command": "firestore-studio.init",
+        "title": "Firestore Studio: Initialize"
       },
       {
-        "command": "firestore-explorer.setServiceAccountKeyPath",
-        "title": "Firestore Explorer: Set Service Account Key path"
+        "command": "firestore-studio.setServiceAccountKeyPath",
+        "title": "Firestore Studio: Set Service Account Key path"
       },
       {
-        "command": "firestore-explorer.refreshExplorer",
-        "title": "Firestore Explorer: Refresh Explorer",
+        "command": "firestore-studio.refreshExplorer",
+        "title": "Firestore Studio: Refresh Explorer",
         "icon": "$(refresh)"
       },
       {
-        "command": "firestore-explorer.copyPath",
+        "command": "firestore-studio.copyPath",
         "title": "Copy Path"
       },
       {
-        "command": "firestore-explorer.orderBy",
+        "command": "firestore-studio.orderBy",
         "title": "Order by..."
       },
       {
-        "command": "firestore-explorer.showMoreItems",
+        "command": "firestore-studio.showMoreItems",
         "title": "Show More Items",
         "enablement": "true"
       },
       {
-        "command": "firestore-explorer.openCollectionAsTable",
+        "command": "firestore-studio.openCollectionAsTable",
         "title": "Open Collection as Table"
       },
       {
-        "command": "firestore-explorer.createDocument",
+        "command": "firestore-studio.createDocument",
         "title": "Create Document"
       },
       {
-        "command": "firestore-explorer.deleteDocument",
+        "command": "firestore-studio.deleteDocument",
         "title": "Delete Document"
       }
     ],
     "menus": {
       "view/title": [
         {
-          "command": "firestore-explorer.refreshExplorer",
-          "when": "view == firestore-explorer-view",
+          "command": "firestore-studio.refreshExplorer",
+          "when": "view == firestore-studio-view",
           "group": "navigation"
         }
       ],
       "view/item/context": [
         {
-          "command": "firestore-explorer.copyPath",
-          "when": "view == firestore-explorer-view"
+          "command": "firestore-studio.copyPath",
+          "when": "view == firestore-studio-view"
         },
         {
-          "command": "firestore-explorer.orderBy",
-          "when": "view == firestore-explorer-view"
+          "command": "firestore-studio.orderBy",
+          "when": "view == firestore-studio-view"
         },
         {
-          "command": "firestore-explorer.openCollectionAsTable",
-          "when": "view == firestore-explorer-view && viewItem == 'collection'"
+          "command": "firestore-studio.openCollectionAsTable",
+          "when": "view == firestore-studio-view && viewItem == 'collection'"
         },
         {
-          "command": "firestore-explorer.createDocument",
-          "when": "view == firestore-explorer-view && viewItem == 'collection'"
+          "command": "firestore-studio.createDocument",
+          "when": "view == firestore-studio-view && viewItem == 'collection'"
         },
         {
-          "command": "firestore-explorer.deleteDocument",
-          "when": "view == firestore-explorer-view && viewItem == 'document'"
+          "command": "firestore-studio.deleteDocument",
+          "when": "view == firestore-studio-view && viewItem == 'document'"
         }
       ],
       "commandPalette": [
         {
-          "command": "firestore-explorer.copyPath",
+          "command": "firestore-studio.copyPath",
           "when": "false"
         },
         {
-          "command": "firestore-explorer.orderBy",
+          "command": "firestore-studio.orderBy",
           "when": "false"
         },
         {
-          "command": "firestore-explorer.showMoreItems",
+          "command": "firestore-studio.showMoreItems",
           "when": "false"
         },
         {
-          "command": "firestore-explorer.createDocument",
+          "command": "firestore-studio.createDocument",
           "when": "false"
         },
         {
-          "command": "firestore-explorer.deleteDocument",
+          "command": "firestore-studio.deleteDocument",
           "when": "false"
         }
       ]

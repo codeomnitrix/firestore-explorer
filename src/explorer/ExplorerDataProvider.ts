@@ -5,7 +5,7 @@ import initializeFirestore from "../utilities/initializeFirestore";
 import { CollectionItem, DocumentItem, Item, ShowMoreItemsItem } from "./items";
 
 /**
- * Provides the Firestore Explorer Tree View data.
+ * Provides the Firestore Studio Tree View data.
  */
 export default class ExplorerDataProvider implements vscode.TreeDataProvider<Item> {
     // TODO: Consider using Firestore subscriptions to dynamically update the tree view.
@@ -72,7 +72,7 @@ export default class ExplorerDataProvider implements vscode.TreeDataProvider<Ite
                 }
             ));
         } else if (element instanceof CollectionItem) {
-            const limit = this._paging[element.reference.path] ?? vscode.workspace.getConfiguration().get("firestore-explorer.pagingLimit");
+            const limit = this._paging[element.reference.path] ?? vscode.workspace.getConfiguration().get("firestore-studio.pagingLimit");
 
             console.log(this._orderBy[element.reference.path]?.field ?? admin.firestore.FieldPath.documentId());
             const snapshots = await element.reference
@@ -123,7 +123,7 @@ export default class ExplorerDataProvider implements vscode.TreeDataProvider<Ite
      * @param  {string} path
      */
     async showMoreItems(path: string) {
-        const defaultLimit = vscode.workspace.getConfiguration().get("firestore-explorer.pagingLimit") as number;
+        const defaultLimit = vscode.workspace.getConfiguration().get("firestore-studio.pagingLimit") as number;
         console.log("Default Limit:", defaultLimit);
         const newLimit = (this._paging[path] ?? defaultLimit) + defaultLimit;
         this._paging[path] = newLimit;

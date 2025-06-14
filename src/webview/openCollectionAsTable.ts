@@ -4,81 +4,81 @@ import initializeFirestore from "../utilities/initializeFirestore";
 import openPath from "../commands/openPath";
 
 export async function openCollectionAsTable(item: CollectionItem) {
-    let hasMore = true;
-    const panel = vscode.window.createWebviewPanel(
-        "firestoreCollectionTable",
-        `Collection: ${item.collectionId}`,
-        vscode.ViewColumn.One,
-        {
-            enableScripts: true,
-            retainContextWhenHidden: true,
-        }
+  let hasMore = true;
+  const panel = vscode.window.createWebviewPanel(
+    "firestoreCollectionTable",
+    `Collection: ${item.collectionId}`,
+    vscode.ViewColumn.One,
+    {
+      enableScripts: true,
+      retainContextWhenHidden: true,
+    }
+  );
+
+  const limit = vscode.workspace.getConfiguration().get("firestore-studio.pagingLimit") as number;
+  let loadedDocs: any[] = [];
+  let lastDoc: FirebaseFirestore.QueryDocumentSnapshot | null = null;
+  let headers: string[] = [];
+  let isSearchMode = false;
+  let searchValue = "";
+
+  async function loadMoreDocs() {
+    const firestore = await initializeFirestore();
+    let query = item.reference.limit(limit);
+    if (lastDoc) {
+      query = query.startAfter(lastDoc);
+    }
+    const snapshot = await query.get();
+    const docs = snapshot.docs.map(doc => ({ ...doc.data(), __path: doc.ref.path }));
+    if (docs.length > 0 && headers.length === 0) {
+      headers = Object.keys(docs[0]);
+    }
+    loadedDocs = loadedDocs.concat(docs);
+    if (snapshot.docs.length > 0) {
+      lastDoc = snapshot.docs[snapshot.docs.length - 1];
+    }
+    hasMore = docs.length === limit;
+    return docs.length;
+  }
+
+  async function searchDocs(value: string) {
+    // Fetch all docs from the server (be careful with large collections!)
+    loadedDocs = [];
+    lastDoc = null;
+    let hasMoreDocs = true;
+    let allDocs: any[] = [];
+    while (hasMoreDocs) {
+      const firestore = await initializeFirestore();
+      let query = item.reference.limit(limit);
+      if (lastDoc) {
+        query = query.startAfter(lastDoc);
+      }
+      const snapshot = await query.get();
+      const docs = snapshot.docs.map(doc => ({ ...doc.data(), __path: doc.ref.path }));
+      if (docs.length > 0 && headers.length === 0) {
+        headers = Object.keys(docs[0]);
+      }
+      allDocs = allDocs.concat(docs);
+      if (snapshot.docs.length > 0) {
+        lastDoc = snapshot.docs[snapshot.docs.length - 1];
+      }
+      hasMoreDocs = docs.length === limit;
+    }
+    // Filter docs by search string in any field
+    loadedDocs = allDocs.filter(doc =>
+      Object.values(doc).some(val =>
+        typeof val === "string"
+          ? val.toLowerCase().includes(value)
+          : typeof val === "object"
+            ? JSON.stringify(val).toLowerCase().includes(value)
+            : false
+      )
     );
+    hasMore = false; // No "Load More" in search results
+  }
 
-    const limit = vscode.workspace.getConfiguration().get("firestore-explorer.pagingLimit") as number;
-    let loadedDocs: any[] = [];
-    let lastDoc: FirebaseFirestore.QueryDocumentSnapshot | null = null;
-    let headers: string[] = [];
-    let isSearchMode = false;
-    let searchValue = "";
-
-    async function loadMoreDocs() {
-        const firestore = await initializeFirestore();
-        let query = item.reference.limit(limit);
-        if (lastDoc) {
-            query = query.startAfter(lastDoc);
-        }
-        const snapshot = await query.get();
-        const docs = snapshot.docs.map(doc => ({ ...doc.data(), __path: doc.ref.path }));
-        if (docs.length > 0 && headers.length === 0) {
-            headers = Object.keys(docs[0]);
-        }
-        loadedDocs = loadedDocs.concat(docs);
-        if (snapshot.docs.length > 0) {
-            lastDoc = snapshot.docs[snapshot.docs.length - 1];
-        }
-        hasMore = docs.length === limit;
-        return docs.length;
-    }
-
-    async function searchDocs(value: string) {
-        // Fetch all docs from the server (be careful with large collections!)
-        loadedDocs = [];
-        lastDoc = null;
-        let hasMoreDocs = true;
-        let allDocs: any[] = [];
-        while (hasMoreDocs) {
-            const firestore = await initializeFirestore();
-            let query = item.reference.limit(limit);
-            if (lastDoc) {
-                query = query.startAfter(lastDoc);
-            }
-            const snapshot = await query.get();
-            const docs = snapshot.docs.map(doc => ({ ...doc.data(), __path: doc.ref.path }));
-            if (docs.length > 0 && headers.length === 0) {
-                headers = Object.keys(docs[0]);
-            }
-            allDocs = allDocs.concat(docs);
-            if (snapshot.docs.length > 0) {
-                lastDoc = snapshot.docs[snapshot.docs.length - 1];
-            }
-            hasMoreDocs = docs.length === limit;
-        }
-        // Filter docs by search string in any field
-        loadedDocs = allDocs.filter(doc =>
-            Object.values(doc).some(val =>
-                typeof val === "string"
-                    ? val.toLowerCase().includes(value)
-                    : typeof val === "object"
-                        ? JSON.stringify(val).toLowerCase().includes(value)
-                        : false
-            )
-        );
-        hasMore = false; // No "Load More" in search results
-    }
-
-    async function getHtml() {
-        return `
+  async function getHtml() {
+    return `
       <html>
       <head>
         <style>
@@ -190,12 +190,12 @@ export async function openCollectionAsTable(item: CollectionItem) {
             ${loadedDocs.map(doc => `
               <tr data-path="${doc.__path || doc.id}">
                 ${headers.map(h => {
-                  const value = doc[h];
-                  return `<td>${value !== null && typeof value === "object"
-                    ? JSON.stringify(value)
-                    : value ?? ""
-                  }</td>`;
-                }).join("")}
+      const value = doc[h];
+      return `<td>${value !== null && typeof value === "object"
+        ? JSON.stringify(value)
+        : value ?? ""
+        }</td>`;
+    }).join("")}
               </tr>
             `).join("")}
           </tbody>
@@ -277,54 +277,54 @@ export async function openCollectionAsTable(item: CollectionItem) {
       </body>
       </html>
     `;
+  }
+
+  // Initial load
+  await loadMoreDocs();
+  panel.webview.html = await getHtml();
+
+  panel.webview.onDidReceiveMessage(async message => {
+    if (message.command === "loadMore") {
+      const added = await loadMoreDocs();
+      panel.webview.html = await getHtml();
     }
-
-    // Initial load
-    await loadMoreDocs();
-    panel.webview.html = await getHtml();
-
-    panel.webview.onDidReceiveMessage(async message => {
-        if (message.command === "loadMore") {
-            const added = await loadMoreDocs();
-            panel.webview.html = await getHtml();
-        }
-        if (message.command === "openDoc" && message.path) {
-            openPath(message.path);
-        }
-        if (message.command === "exportJson") {
-            const uri = await vscode.window.showSaveDialog({
-                defaultUri: vscode.Uri.file('firestore_export.json'),
-                filters: { 'JSON': ['json'] }
-            });
-            if (uri) {
-                await vscode.workspace.fs.writeFile(uri, Buffer.from(JSON.stringify(message.data, null, 2)));
-                vscode.window.showInformationMessage('Exported JSON!');
-            } else {
-                vscode.window.showWarningMessage('Export failed.');
-            }
-        }
-        if (message.command === "search") {
-            searchValue = message.value.trim().toLowerCase();
-            if (!searchValue) {
-                // If search is empty, reload initial docs
-                isSearchMode = false;
-                loadedDocs = [];
-                lastDoc = null;
-                await loadMoreDocs();
-                panel.webview.html = await getHtml();
-                return;
-            }
-            isSearchMode = true;
-            await searchDocs(searchValue);
-            panel.webview.html = await getHtml();
-        }
-        if (message.command === "clearSearch") {
-            isSearchMode = false;
-            searchValue = "";
-            loadedDocs = [];
-            lastDoc = null;
-            await loadMoreDocs();
-            panel.webview.html = await getHtml();
-        }
-    });
+    if (message.command === "openDoc" && message.path) {
+      openPath(message.path);
+    }
+    if (message.command === "exportJson") {
+      const uri = await vscode.window.showSaveDialog({
+        defaultUri: vscode.Uri.file('firestore_export.json'),
+        filters: { 'JSON': ['json'] }
+      });
+      if (uri) {
+        await vscode.workspace.fs.writeFile(uri, Buffer.from(JSON.stringify(message.data, null, 2)));
+        vscode.window.showInformationMessage('Exported JSON!');
+      } else {
+        vscode.window.showWarningMessage('Export failed.');
+      }
+    }
+    if (message.command === "search") {
+      searchValue = message.value.trim().toLowerCase();
+      if (!searchValue) {
+        // If search is empty, reload initial docs
+        isSearchMode = false;
+        loadedDocs = [];
+        lastDoc = null;
+        await loadMoreDocs();
+        panel.webview.html = await getHtml();
+        return;
+      }
+      isSearchMode = true;
+      await searchDocs(searchValue);
+      panel.webview.html = await getHtml();
+    }
+    if (message.command === "clearSearch") {
+      isSearchMode = false;
+      searchValue = "";
+      loadedDocs = [];
+      lastDoc = null;
+      await loadMoreDocs();
+      panel.webview.html = await getHtml();
+    }
+  });
 }

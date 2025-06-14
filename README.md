@@ -1,4 +1,4 @@
-# Firestore Explorer
+# Firestore Studio
 
 A simple Visual Studio Code Extension for listing, viewing, creating/deleting and editing Firebase Firestore Database collections and documents using JSON syntax.
 
@@ -10,11 +10,11 @@ A simple Visual Studio Code Extension for listing, viewing, creating/deleting an
 
 To use this extension you will need to generate a Firebase service account from your Firebase console, as explained in the [Firebase Admin SDK documentation](https://firebase.google.com/docs/admin/setup#set-up-project-and-service-account).
 
-Provide a path to the service account JSON file in the `serviceAccountKeyPath` setting. You can also use the "Firestore Explorer: Initialize" command from the Command Palette to quickly reach the setting field.
+Provide a path to the service account JSON file in the `serviceAccountKeyPath` setting. You can also use the "Firestore Studio: Initialize" command from the Command Palette to quickly reach the setting field.
 
 ## Features
 
-After configuring the extension with your service account, open the Firestore Explorer View in the activity bar to:
+After configuring the extension with your service account, open the Firestore Studio View in the activity bar to:
 
 - navigate all the collections and documents of your project (items will be loaded only when needed and paged to minimize the number of API requests);
 

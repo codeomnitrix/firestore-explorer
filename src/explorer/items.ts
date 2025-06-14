@@ -15,7 +15,7 @@ export class DocumentItem extends Item {
         public size: number | undefined = undefined,
     ) {
         super(documentId, vscode.TreeItemCollapsibleState.None);
-        this.command = { command: "firestore-explorer.openPath", title: "Open", arguments: [reference.path] };
+        this.command = { command: "firestore-studio.openPath", title: "Open", arguments: [reference.path] };
 
         this.id = reference.path;
         this.contextValue = 'document';
@@ -67,13 +67,13 @@ export class ShowMoreItemsItem extends Item {
     offset: number;
 
     constructor(reference: admin.firestore.CollectionReference, offset: number) {
-        const pagingLimit = vscode.workspace.getConfiguration().get("firestore-explorer.pagingLimit") as number;
+        const pagingLimit = vscode.workspace.getConfiguration().get("firestore-studio.pagingLimit") as number;
         super(`Load ${pagingLimit} more`, vscode.TreeItemCollapsibleState.None,);
         this.reference = reference;
         this.id = reference.path + "///showMore";
         this.offset = offset;
         this.iconPath = new vscode.ThemeIcon("more");
-        this.command = { command: "firestore-explorer.showMoreItems", title: "More Items", arguments: [reference.path] };
+        this.command = { command: "firestore-studio.showMoreItems", title: "More Items", arguments: [reference.path] };
     }
 
     // TODO: Show progress animation when loading more items

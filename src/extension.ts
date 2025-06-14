@@ -18,55 +18,55 @@ import { openCollectionAsTable } from "./webview/openCollectionAsTable";
 export async function activate(context: vscode.ExtensionContext) {
   const explorerDataProvider = new ExplorerDataProvider();
 
-  const explorerView = vscode.window.createTreeView('firestore-explorer-view', {
+  const explorerView = vscode.window.createTreeView('firestore-studio-view', {
     treeDataProvider: explorerDataProvider,
   });
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "firestore-explorer.setServiceAccountKeyPath",
+      "firestore-studio.setServiceAccountKeyPath",
       openServiceAccountSettings
     ),
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "firestore-explorer.init",
+      "firestore-studio.init",
       init
     ),
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "firestore-explorer.openPath",
+      "firestore-studio.openPath",
       openPath
     )
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "firestore-explorer.refreshExplorer",
+      "firestore-studio.refreshExplorer",
       () => explorerDataProvider.refresh()
     )
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "firestore-explorer.copyPath",
+      "firestore-studio.copyPath",
       copyPath
     )
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "firestore-explorer.orderBy",
+      "firestore-studio.orderBy",
       (item: Item) => orderBy(item, explorerDataProvider)
     )
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "firestore-explorer.showMoreItems",
+      "firestore-studio.showMoreItems",
       (path: string) => {
         console.log("Show more items for path:", path);
         explorerDataProvider.showMoreItems(path);
@@ -76,7 +76,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "firestore-explorer.openCollectionAsTable",
+      "firestore-studio.openCollectionAsTable",
       (item: CollectionItem) => {
         openCollectionAsTable(item);
       }
@@ -84,7 +84,7 @@ export async function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("firestore-explorer.createDocument", async (item) => {
+    vscode.commands.registerCommand("firestore-studio.createDocument", async (item) => {
       // Prompt for document ID (optional)
       const docId = await vscode.window.showInputBox({
         prompt: "Enter Document ID (leave blank for auto-ID)",
@@ -117,7 +117,7 @@ export async function activate(context: vscode.ExtensionContext) {
           : item.reference.doc();
         await ref.set(data);
         vscode.window.showInformationMessage("Document created!");
-        vscode.commands.executeCommand("firestore-explorer.refreshExplorer");
+        vscode.commands.executeCommand("firestore-studio.refreshExplorer");
       } catch (err: any) {
         vscode.window.showErrorMessage("Failed to create document: " + err.message);
       }
@@ -125,7 +125,7 @@ export async function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("firestore-explorer.deleteDocument", async (item) => {
+    vscode.commands.registerCommand("firestore-studio.deleteDocument", async (item) => {
       const confirm = await vscode.window.showWarningMessage(
         `Are you sure you want to delete the document "${item.label}"?`,
         { modal: true },
@@ -138,7 +138,7 @@ export async function activate(context: vscode.ExtensionContext) {
           const firestore = await initializeFirestore();
           await item.reference.delete();
           vscode.window.showInformationMessage("Document deleted!");
-          vscode.commands.executeCommand("firestore-explorer.refreshExplorer");
+          vscode.commands.executeCommand("firestore-studio.refreshExplorer");
         } catch (err: any) {
           vscode.window.showErrorMessage("Failed to delete document: " + err.message);
         }
