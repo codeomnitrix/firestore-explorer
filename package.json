@@ -3,10 +3,10 @@
   "displayName": "Firestore Explorer",
   "description": "A simple explorer for Firebase Firestore Database",
   "version": "0.1.1",
-  "publisher": "alesdi",
+  "publisher": "vinittiwari",
   "icon": "media/logo.png",
   "repository": {
-    "url": "https://github.com/alesdi/firestore-explorer"
+    "url": "https://github.com/codeomnitrix/firestore-explorer"
   },
   "engines": {
     "vscode": "^1.66.0"
@@ -22,7 +22,7 @@
     "onCommand:firestore-explorer.showMoreItems",
     "onView:firestore-explorer-view"
   ],
-  "main": "./out/extension.js",
+  "main": "./dist/extension.js",
   "contributes": {
     "configuration": {
       "title": "Firestore Explorer",
@@ -94,7 +94,11 @@
       {
         "command": "firestore-explorer.showMoreItems",
         "title": "Show More Items",
-        "enablement": "false"
+        "enablement": "true"
+      },
+      {
+        "command": "firestore-explorer.openCollectionAsTable",
+        "title": "Open Collection as Table"
       }
     ],
     "menus": {
@@ -113,6 +117,10 @@
         {
           "command": "firestore-explorer.orderBy",
           "when": "view == firestore-explorer-view"
+        },
+        {
+          "command": "firestore-explorer.openCollectionAsTable",
+          "when": "view == firestore-explorer-view && viewItem == 'collection'"
         }
       ],
       "commandPalette": [

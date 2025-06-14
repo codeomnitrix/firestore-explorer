@@ -1,5 +1,6 @@
 import * as admin from "firebase-admin";
 import * as vscode from "vscode";
+import * as fs from "fs";
 import openServiceAccountSettings from "../commands/openServiceAccountSettings";
 
 /**
@@ -32,13 +33,17 @@ export default async function initializeFirestore(force = false): Promise<admin.
       }
 
       // Initialize the Firebase app with the service account key
-      admin.initializeApp({
-        credential: admin.credential.cert(require(filePath)),
-      });
+      const serviceAccount = JSON.parse(fs.readFileSync(filePath, "utf8"));
+      if(admin.apps.length === 0) {
+        admin.initializeApp({
+          credential: admin.credential.cert(serviceAccount),
+        });
+      }
       // Firebase is initialized.
     }
   } catch (e) {
     // Something went wrong. Firebase could not be initialized.
+    vscode.window.showErrorMessage("Failed to initialize Firebase. Please check your settings." + (e instanceof Error ? ` Error: ${e.message}` : ""));
     console.error(e);
   }
 

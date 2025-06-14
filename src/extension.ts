@@ -9,8 +9,9 @@ import openServiceAccountSettings from "./commands/openServiceAccountSettings";
 import { scheme } from "./constants";
 import { DocumentFileSystemProvider } from "./editor/DocumentFileSystemProvider";
 import ExplorerDataProvider from "./explorer/ExplorerDataProvider";
-import { Item } from "./explorer/items";
+import { CollectionItem, Item } from "./explorer/items";
 import initializeFirestore from "./utilities/initializeFirestore";
+import { openCollectionAsTable } from "./webview/openCollectionAsTable";
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -66,9 +67,22 @@ export async function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "firestore-explorer.showMoreItems",
-      (path: string) => explorerDataProvider.showMoreItems(path)
+      (path: string) => {
+        console.log("Show more items for path:", path);
+        explorerDataProvider.showMoreItems(path);
+      }
     )
   );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "firestore-explorer.openCollectionAsTable",
+      (item: CollectionItem) => {
+        openCollectionAsTable(item);
+      }
+    )
+  );
+
   context.subscriptions.push(explorerView);
 
   context.subscriptions.push(

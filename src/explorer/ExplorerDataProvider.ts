@@ -124,6 +124,7 @@ export default class ExplorerDataProvider implements vscode.TreeDataProvider<Ite
      */
     async showMoreItems(path: string) {
         const defaultLimit = vscode.workspace.getConfiguration().get("firestore-explorer.pagingLimit") as number;
+        console.log("Default Limit:", defaultLimit);
         const newLimit = (this._paging[path] ?? defaultLimit) + defaultLimit;
         this._paging[path] = newLimit;
         this.refresh();
