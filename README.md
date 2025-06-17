@@ -37,3 +37,6 @@ After configuring the extension with your service account, open the Firestore St
 
 - Special field types such as `geopoint` and `timestamp` are not correctly handled due to the JSON conversion.
 
+## Liked this project?
+Please do support me at - https://coff.ee/codeomnitrix
+
