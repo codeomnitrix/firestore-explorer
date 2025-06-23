@@ -2,6 +2,12 @@
 
 A simple Visual Studio Code Extension for listing, viewing, creating/deleting and editing Firebase Firestore Database collections and documents using JSON syntax.
 
+## Have some feedback or feature suggesitons?
+Please share your thoughts at [Firestore Feature Request](https://docs.google.com/forms/d/e/1FAIpQLSdwXajd_vlj2letMQcpeEmIyci-yY1Uln96y8DhoIK9SQoxNg/viewform?usp=dialog) and I will review those requests to make the extension better over time. 
+
+## Liked this extension? 
+[Buy me a coffee!](https://coff.ee/codeomnitrix)
+
 **Be careful:** this is not an official Firebase product. This extension relies on the [Firebase Admin SDK](https://firebase.google.com/docs/admin/setup) and its usage will generate reads and writes that may impact your Firebase billing.
 
 [Demo Video](https://youtu.be/CaDOCA5DG-k)
@@ -36,7 +42,4 @@ After configuring the extension with your service account, open the Firestore St
 ## Known Issues
 
 - Special field types such as `geopoint` and `timestamp` are not correctly handled due to the JSON conversion.
-
-## Liked this project?
-Please do support me at - https://coff.ee/codeomnitrix
 
