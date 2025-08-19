@@ -11,6 +11,7 @@ export default async function openPath(path?: string): Promise<void> {
     placeHolder: "Firestore Path",
   });
   if (path !== undefined) {
+    console.log(`Opening path: ${path}`);
     const firestore = await initializeFirestore();
 
     try {

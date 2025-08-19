@@ -9,7 +9,7 @@
     "database",
     "vscode"
   ],
-  "version": "0.1.3",
+  "version": "0.1.4",
   "publisher": "codeomnitrix",
   "icon": "media/logo.png",
   "repository": {
@@ -43,6 +43,20 @@
           "type": "number",
           "default": 10,
           "description": "Number of documents to show for each collection"
+        },
+        "firestore-studio.documentTemplates": {
+          "type": "array",
+          "properties": {
+            "label": {
+              "type": "string",              
+              "description": "Label for the document template"
+            },
+            "data": {
+              "type": "object",              
+              "description": "Default data for the document template"
+            }
+          },
+          "required": ["label", "data"]
         }
       }
     },
